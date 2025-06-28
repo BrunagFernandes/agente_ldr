@@ -124,9 +124,10 @@ if st.button("🧹 Iniciar Limpeza e Padronização"):
                 outras_colunas = [col for col in df_limpo.columns if col not in colunas_existentes_na_ordem]
                 df_limpo = df_limpo[colunas_existentes_na_ordem + outras_colunas]
                 
-                df_limpo.fillna('', inplace=True)
+                # Limpeza final para garantir que não haja 'nan' ou valores nulos
                 for col in df_limpo.columns:
-                    df_limpo[col] = df_limpo[col].astype(str).replace('nan', '')
+                    df_limpo[col] = df_limpo[col].astype(str)
+                    df_limpo[col] = df_limpo[col].str.replace('nan', '', case=False)
 
                 st.success("Arquivo limpo e padronizado com sucesso!")
                 st.dataframe(df_limpo.head(10))
