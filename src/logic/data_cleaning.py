@@ -1,4 +1,4 @@
-# Arquivo: src/logic/data_cleaning.py
+# Arquivo: src/logic/data_cleaning.py (Versão Corrigida)
 import pandas as pd
 import re
 import unicodedata
@@ -52,14 +52,26 @@ def padronizar_nome_empresa(nome_empresa):
 def padronizar_localidade_geral(valor, tipo, mapa_cidades, mapa_estados):
     if pd.isna(valor): return ''
     mapa_paises = { 'br': 'Brasil', 'bra': 'Brasil', 'brazil': 'Brasil' }
+    
+    # Normaliza o valor de entrada para uma busca sem acentos e minúscula
     chave_busca = normalizar_texto_para_comparacao(str(valor))
+
     if tipo == 'cidade':
         return mapa_cidades.get(chave_busca, title_case_com_excecoes(str(valor), ['de', 'da', 'do', 'dos', 'das']))
+    
     elif tipo == 'estado':
+        # --- ALTERAÇÃO REALIZADA AQUI ---
+        # Se encontrar 'federal district' na busca, retorna o nome correto imediatamente.
+        if 'federal district' in chave_busca:
+            return 'Distrito Federal'
+        
+        # Lógica original para os outros estados
         chave_busca_estado = re.sub(r'state of ', '', chave_busca).strip()
         return mapa_estados.get(chave_busca_estado, title_case_com_excecoes(str(valor), ['de', 'do']))
+    
     elif tipo == 'pais':
         return mapa_paises.get(chave_busca, str(valor).capitalize())
+        
     return valor
 
 def padronizar_site(site):
