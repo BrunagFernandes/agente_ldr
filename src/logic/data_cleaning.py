@@ -99,3 +99,14 @@ def padronizar_segmento(segmento):
     if pd.isna(segmento): return ''
     segmento_norm = str(segmento).lower().strip()
     return DICIONARIO_SEGMENTOS.get(segmento_norm, title_case_com_excecoes(segmento, []))
+
+def padronizar_numero_funcionarios(valor):
+    """Converte o número de funcionários para um inteiro (removendo o .0) e depois para string."""
+    if pd.isna(valor) or str(valor).strip() == '':
+        return ''
+    try:
+        # Tenta converter o valor para float, depois para inteiro, e finalmente para string
+        return str(int(float(valor)))
+    except (ValueError, TypeError):
+        # Se não for um número conversível, retorna o valor como está (em formato string)
+        return str(valor)

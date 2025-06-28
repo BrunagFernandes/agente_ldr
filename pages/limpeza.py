@@ -13,6 +13,7 @@ from src.logic.data_cleaning import (
     padronizar_site,
     padronizar_telefone,
     padronizar_segmento
+    padronizar_numero_funcionarios 
 )
 
 # --- LÓGICA DA PÁGINA (CARREGAMENTO DE DADOS) ---
@@ -100,6 +101,7 @@ if st.button("🧹 Iniciar Limpeza e Padronização"):
                     'Site_Original': padronizar_site,
                     'Telefone_Original': padronizar_telefone,
                     'Segmento_Original': padronizar_segmento, 
+                    'Numero_Funcionarios': padronizar_numero_funcionarios,
                     'Cidade_Contato': lambda x: padronizar_localidade_geral(x, 'cidade', MAPA_CIDADES, MAPA_ESTADOS),
                     'Estado_Contato': lambda x: padronizar_localidade_geral(x, 'estado', MAPA_CIDADES, MAPA_ESTADOS),
                     'Pais_Contato': lambda x: padronizar_localidade_geral(x, 'pais', MAPA_CIDADES, MAPA_ESTADOS),
