@@ -1,4 +1,4 @@
-# Arquivo: pages/1_Limpeza.py
+# Arquivo: pages/1_Limpeza.py (Versão Corrigida)
 import streamlit as st
 import pandas as pd
 import requests
@@ -12,7 +12,7 @@ from src.logic.data_cleaning import (
     padronizar_localidade_geral,
     padronizar_site,
     padronizar_telefone,
-    padronizar_segmento
+    padronizar_segmento, # <-- VÍRGULA ADICIONADA AQUI
     padronizar_numero_funcionarios 
 )
 
