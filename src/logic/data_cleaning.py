@@ -2,14 +2,22 @@
 import pandas as pd
 import re
 import unicodedata
-from dados_traducao import DICIONARIO_SEGMENTOS
+
+# Tenta importar o dicionário de segmentos. Se não encontrar, cria um dicionário vazio.
+try:
+    from dados_traducao import DICIONARIO_SEGMENTOS
+except ImportError:
+    DICIONARIO_SEGMENTOS = {}
 
 # --- FUNÇÕES DE PADRONIZAÇÃO DA ESTAÇÃO 1 ---
 
-# (As funções MAPA_CIDADES e MAPA_ESTADOS precisam ser passadas como argumentos agora)
+def normalizar_texto_para_comparacao(texto):
+    """Remove acentos e converte para minúsculo para comparações internas."""
+    if pd.isna(texto): return ""
+    s = str(texto).lower().strip()
+    return ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
 
 def title_case_com_excecoes(s, excecoes):
-    # ... (código da função igual ao que tínhamos)
     palavras = str(s).split()
     if not palavras:
         return ""
@@ -22,7 +30,6 @@ def title_case_com_excecoes(s, excecoes):
     return ' '.join(resultado)
 
 def padronizar_nome_contato(row, df_columns):
-    # ... (código da função igual ao que tínhamos)
     nome_col = next((col for col in df_columns if 'first name' in col.lower() or 'nome_lead' in col.lower()), None)
     sobrenome_col = next((col for col in df_columns if 'last name' in col.lower() or 'sobrenome_lead' in col.lower()), None)
     if not nome_col or pd.isna(row.get(nome_col)): return ''
@@ -35,7 +42,6 @@ def padronizar_nome_contato(row, df_columns):
     return nome_final.title()
 
 def padronizar_nome_empresa(nome_empresa):
-    # ... (código da função igual ao que tínhamos)
     if pd.isna(nome_empresa): return ''
     nome_limpo = str(nome_empresa)
     siglas = [r'\sS/A', r'\sS\.A', r'\sSA\b', r'\sLTDA', r'\sLtda', r'\sME\b', r'\sEIRELI', r'\sEPP', r'\sMEI\b']
@@ -43,14 +49,7 @@ def padronizar_nome_empresa(nome_empresa):
         nome_limpo = re.sub(sigla, '', nome_limpo, flags=re.IGNORECASE)
     return title_case_com_excecoes(nome_limpo.strip(), ['de', 'da', 'do', 'dos', 'das', 'e'])
 
-def normalizar_texto_para_comparacao(texto):
-    """Remove acentos e converte para minúsculo para comparações internas."""
-    if pd.isna(texto): return ""
-    s = str(texto).lower().strip()
-    return ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
-
 def padronizar_localidade_geral(valor, tipo, mapa_cidades, mapa_estados):
-    # ... (código da função com a adição de mapa_cidades e mapa_estados como argumentos)
     if pd.isna(valor): return ''
     mapa_paises = { 'br': 'Brasil', 'bra': 'Brasil', 'brazil': 'Brasil' }
     chave_busca = normalizar_texto_para_comparacao(str(valor))
@@ -64,7 +63,6 @@ def padronizar_localidade_geral(valor, tipo, mapa_cidades, mapa_estados):
     return valor
 
 def padronizar_site(site):
-    # ... (código da função igual ao que tínhamos)
     if pd.isna(site) or str(site).strip() == '': return ''
     site_limpo = str(site).strip()
     site_limpo = re.sub(r'^(https?://)?', '', site_limpo)
@@ -74,7 +72,6 @@ def padronizar_site(site):
     return site_limpo
 
 def padronizar_telefone(telefone):
-    # ... (código da sua função "Padrão Ouro" de telefone)
     if pd.isna(telefone):
         return ''
     tel_str = str(telefone).strip()
@@ -99,7 +96,6 @@ def padronizar_telefone(telefone):
 
 def padronizar_segmento(segmento):
     """Traduz o segmento usando o dicionário interno."""
-    # ... (código da função igual ao que tínhamos)
     if pd.isna(segmento): return ''
     segmento_norm = str(segmento).lower().strip()
     return DICIONARIO_SEGMENTOS.get(segmento_norm, title_case_com_excecoes(segmento, []))
