@@ -75,12 +75,20 @@ def padronizar_localidade_geral(valor, tipo, mapa_cidades, mapa_estados):
     return valor
 
 def padronizar_site(site):
-    if pd.isna(site) or str(site).strip() == '': return ''
+    """Garante que o site comece com www e não tenha prefixos extras, tratando corretamente células vazias."""
+    # Verifica se o valor é nulo ou a string 'nan' antes de qualquer processamento
+    if pd.isna(site) or str(site).strip().lower() in ['', 'nan']:
+        return ''
+    
     site_limpo = str(site).strip()
+    # Remove http://, https:// e a barra final
     site_limpo = re.sub(r'^(https?://)?', '', site_limpo)
     site_limpo = site_limpo.rstrip('/')
+
+    # Garante que comece com www. se não já começar
     if not site_limpo.lower().startswith('www.'):
         site_limpo = 'www.' + site_limpo
+        
     return site_limpo
 
 def padronizar_telefone(telefone):
