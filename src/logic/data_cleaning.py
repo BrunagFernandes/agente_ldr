@@ -115,9 +115,15 @@ def padronizar_telefone(telefone):
     return ''
 
 def padronizar_segmento(segmento):
-    """Traduz o segmento usando o dicionário interno."""
     if pd.isna(segmento): return ''
+    
     segmento_norm = str(segmento).lower().strip()
+    
+    def padronizar_segmento(segmento):
+     if pd.isna(segmento): return ''
+    
+    segmento_norm = str(segmento).lower().strip().replace('&', 'and')
+    
     return DICIONARIO_SEGMENTOS.get(segmento_norm, title_case_com_excecoes(segmento, []))
 
 def padronizar_numero_funcionarios(valor):

@@ -1,3 +1,5 @@
+
+
 # 🤖 Agente LDR: Automação Inteligente de Geração de Leads
 
 **Um assistente de software que transforma listas de contatos brutas em bases de leads qualificados, limpas e prontas para a ação.**
@@ -82,4 +84,4 @@ Para contribuir com o projeto ou rodá-lo em um novo ambiente (como o GitHub Cod
 4.  **Execute o aplicativo Streamlit:**
     ```bash
     streamlit run app.py
-    ```
+
