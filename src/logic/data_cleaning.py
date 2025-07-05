@@ -44,7 +44,9 @@ def padronizar_nome_contato(row, df_columns):
 def padronizar_nome_empresa(nome_empresa):
     if pd.isna(nome_empresa): return ''
     nome_limpo = str(nome_empresa)
-    siglas = [r'\sS/A', r'\sS\.A', r'\sSA\b', r'\sLTDA', r'\sLtda', r'\sME\b', r'\sEIRELI', r'\sEPP', r'\sMEI\b']
+    siglas = [r'\sS\.A\.', r'\sS/A', r'\sS\.A', r'\sSA\.', r'\sSA\b',
+        r'\sLTDA\.?', r'\sLtda\.?', r'\sEIRELI\.?', r'\sMEI\.?',
+        r'\sME\b', r'\sEPP']
     for sigla in siglas:
         nome_limpo = re.sub(sigla, '', nome_limpo, flags=re.IGNORECASE)
     return title_case_com_excecoes(nome_limpo.strip(), ['de', 'da', 'do', 'dos', 'das', 'e'])
