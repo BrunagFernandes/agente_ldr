@@ -96,26 +96,50 @@ def padronizar_site(site):
 def padronizar_telefone(telefone):
     if pd.isna(telefone):
         return ''
+
     tel_str = str(telefone).strip()
+
     if tel_str.startswith('+') and not tel_str.startswith('+55'):
         return ''
+
+    DDDs_VALIDOS = [
+        '11', '12', '13', '14', '15', '16', '17', '18', '19', '21', '22',
+        '24', '27', '28', '31', '32', '33', '34', '35', '37', '38', '41',
+        '42', '43', '44', '45', '46', '47', '48', '49', '51', '53', '54',
+        '55', '61', '62', '63', '64', '65', '66', '67', '68', '69', '71',
+        '73', '74', '75', '77', '79', '81', '82', '83', '84', '85', '86',
+        '87', '88', '89', '91', '92', '93', '94', '95', '96', '97', '98', '99'
+    ]
+
     apenas_digitos = re.sub(r'\D', '', tel_str)
+
     if apenas_digitos.startswith('55'):
         apenas_digitos = apenas_digitos[2:]
-    if apenas_digitos.startswith('0800'):
-        return ''
+    
     if len(apenas_digitos) == 11 and apenas_digitos.startswith('0'):
         apenas_digitos = apenas_digitos[1:]
-    if len(apenas_digitos) not in [10, 11]:
-        return ''
-    if len(apenas_digitos) == 11:
-        return f"({apenas_digitos[:2]}) {apenas_digitos[2:7]}-{apenas_digitos[7:]}"
-    elif len(apenas_digitos) == 10:
-        if apenas_digitos.startswith('800'):
-            return ''
-        return f"({apenas_digitos[:2]}) {apenas_digitos[2:6]}-{apenas_digitos[6:]}"
-    return ''
 
+    if apenas_digitos.startswith('0800') or apenas_digitos.startswith('800'):
+        return ''
+        
+    ddd = apenas_digitos[:2]
+    
+    if len(apenas_digitos) not in [10, 11] or ddd not in DDDs_VALIDOS:
+        return ''
+        
+    if len(apenas_digitos) == 11 and apenas_digitos[2] != '9':
+        return ''
+        
+    if len(apenas_digitos) == 10 and apenas_digitos[2] not in ['2', '3', '4', '5']:
+        return ''
+
+    if len(apenas_digitos) == 11:
+        return f"({ddd}) {apenas_digitos[2:7]}-{apenas_digitos[7:]}"
+    elif len(apenas_digitos) == 10:
+        return f"({ddd}) {apenas_digitos[2:6]}-{apenas_digitos[6:]}"
+        
+    return ''
+# 
 def padronizar_segmento(segmento):
     """Traduz o segmento usando o dicionário interno."""
     if pd.isna(segmento): return ''
